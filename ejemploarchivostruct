@@ -12,7 +12,7 @@ void ALTA_SECUENCIAL(void);
 void LISTADO_SECUENCIAL(void);
 void MODIFICACION_SECUENCIAL(void); 
 void CONSULTA_SECUENCIAL(void);
-void BAJA_LOGICA_SECUENCIAL(void)
+void BAJA_LOGICA_SECUENCIAL(void);
 
 struct tipo_registro{
 	int no_prod;
