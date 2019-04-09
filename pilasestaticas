@@ -1,12 +1,11 @@
+#define MAX 100
 /*************************************************************/
 //                      pila.h
 /*************************************************************/
 class Pila
 {
    private:
-           static const int MAX = 100;
-           typedef int TipoDato;
-           TipoDato pila[MAX];
+           int pila[MAX];
            int cima;
         
    public:
