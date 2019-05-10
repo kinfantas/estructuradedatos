@@ -1,0 +1,101 @@
+/*---------------------------------------------------------------+
++ ejemplo de una cola (QUEUE) basada en un arreglo dinámico +
++ +
++ Autor: Oscar E. Palacios +
++ email: oscarpalacios1@yahoo.com.mx +
++ +
++ Manifiesto: +
++ Este programa puede distribuirse, copiarse y modificarse de +
++ forma libre. +
++---------------------------------------------------------------*/
+#include <iostream>
+
+using namespace std;
+
+typedef char DATA_TYPE;
+
+struct nodo {
+	DATA_TYPE data;
+	nodo *next;
+};
+
+class QueueDin {
+
+    // atributos
+    int ITEMS, ITEMSIZE;
+    nodo *cola, *cabeza;
+
+public:
+    // constructor
+    QueueDin() : cola(NULL), cabeza(NULL), ITEMS(0), ITEMSIZE(sizeof(DATA_TYPE)) {}
+
+    // destructor
+    ~QueueDin() {}
+
+    /* agregar componente a la lista */
+    DATA_TYPE put(DATA_TYPE valor)
+    {
+	nodo *temp;
+
+	temp = new nodo;
+	if (temp == NULL) return -1;
+
+	ITEMS ++;
+	temp->data = valor;
+	temp->next = NULL;
+
+	if (cabeza == NULL)
+	{
+	 cabeza = temp;
+	 cola = temp;
+	} else
+	{
+	 cola->next = temp;
+	 cola = temp;
+	}
+	return valor;
+    }
+
+    // regresa 1 (true) si la lista está vacia
+    int empty() { return ITEMS == 0; }
+
+
+    /* retirar elemento de la lista */
+    DATA_TYPE get()
+    {
+	nodo *temp;
+	DATA_TYPE d;
+
+	if ( empty() ) return -1;
+
+	d = cabeza->data;
+	temp = cabeza->next;
+	if (cabeza) delete cabeza;
+	cabeza = temp;
+	ITEMS --;
+	return d;
+    }
+
+}; // fin de la clase QueueDin
+
+/* punto de prueba */
+int main()
+{
+    QueueDin s;
+    DATA_TYPE d;
+
+    // llenando la cola
+    for (d='A'; d<='Z'; d++) {
+    s.put(d);
+    cout << d << " ";
+    }
+
+    cout << endl;
+    // vaciando la cola
+    while ( ! s.empty() )
+	cout << (DATA_TYPE)s.get() << " ";
+
+    cout << "\nPara terminar presione <Enter>...";
+    cin.get();
+    return 0;
+}
