@@ -1,0 +1,152 @@
+/*---------------------------------------------------------------+
++ ejemplo de una cola doblemente enlazada (Dqueue) basada en un +
++ arreglo dinámico +
++ +
++ Autor: Oscar E. Palacios +
++ email: oscarpalacios1@yahoo.com.mx +
++ +
++ Manifiesto: +
++ Este programa puede distribuirse, copiarse y modificarse de +
++ forma libre. +
++---------------------------------------------------------------*/
+
+#include <iostream.h>
+#include <conio.h>
+
+// using namespace std;
+
+typedef char DATA_TYPE;
+
+struct nodo {
+    DATA_TYPE data;
+    nodo *next, *prev;
+};
+
+class DDqueue {
+
+    int  itemsize, items;
+    nodo *cola, *cabeza;
+
+
+public:
+    // constructor
+    DDqueue() : cola(NULL), cabeza(NULL), items(0), itemsize(sizeof(DATA_TYPE)) {}
+
+    // destructor
+    ~DDqueue() {}
+
+
+/* agregar componente en la parte tracera de la lista */
+DATA_TYPE put_back(DATA_TYPE valor)
+{
+    nodo *temp;
+
+    temp = new nodo;
+    if (temp == NULL) return -1;
+
+    temp->data = valor;
+
+    items ++;
+    if (cabeza == NULL )
+    {
+	temp->next = NULL;
+	temp->prev = NULL;
+	cabeza = temp;
+	cola = temp;
+    } else
+	{
+	 cola->next = temp;
+	 temp->prev = cola;
+	 cola = temp;
+	 cola->next = NULL;
+	}
+    return valor;
+}
+
+/* agregar componente en la parte frontal de la lista */
+DATA_TYPE put_front(DATA_TYPE valor)
+{
+    nodo *temp;
+
+    temp = new nodo;
+    if (temp == NULL) return -1;
+
+    temp->data = valor;
+
+    items ++;
+    if (cabeza == NULL )
+    {
+	temp->next = NULL;
+	temp->prev = NULL;
+	cabeza = temp;
+	cola = temp;
+    } else
+	{
+	 cabeza->prev = temp;
+	 temp->next = cabeza;
+	 cabeza = temp;
+	 cabeza->prev = NULL;
+	}
+    return valor;
+}
+
+// regresa true si la lista está vacia
+int empty() { return items == 0; }
+
+
+/* retirar elemento de la parte frontal lista */
+DATA_TYPE get_front()
+{
+    nodo *temp;
+    DATA_TYPE d;
+
+    if ( empty() ) return -1;
+
+    items --;
+    d = cabeza->data;
+    temp = cabeza->next;
+    if (cabeza) delete cabeza;
+    cabeza = temp;
+    return d;
+}
+
+/* retirar elemento de la parte tracera de la lista */
+DATA_TYPE get_back()
+{
+    nodo *temp;
+    DATA_TYPE d;
+
+    if ( empty() ) return -1;
+
+    items--;
+    d = cola->data;
+    temp = cola->prev;
+    if (cola) delete cola;
+    cola = temp;
+    return d;
+}
+
+}; // fin de la clase DDqueue
+
+/* punto de prueba */
+int main()
+{
+    clrscr();
+
+    DDqueue s;
+    DATA_TYPE d;
+
+    // insertando elementos en la parte tracera
+    for (d='A'; d<='Z'; d++) s.put_back(d);
+
+    // insertando en la parte delantera
+    for (d=9; d>=0; d--)s.put_front(d+'0');
+
+    // vaciando la lista
+    while ( ! s.empty() )
+	cout << (DATA_TYPE)s.get_front() << " ";
+
+    cout << "\nPara terminar presione <Enter>...";
+    cin.get();
+    return 0;
+}
