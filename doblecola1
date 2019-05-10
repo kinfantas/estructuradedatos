@@ -1,0 +1,102 @@
+/*------------------------------------------------------------------+
++ ejemplo de una cola doble (DQUEUE) basada en un arreglo est tico +
++ +
++ Autor: Oscar E. Palacios +
++ email: oscarpalacios1@yahoo.com.mx +
++ +
++ Manifiesto: +
++ Este programa puede distribuirse, copiarse y modificarse de +
++ forma libre. +
++------------------------------------------------------------------*/
+#include <iostream.h>
+#include <mem.h> // por memmove
+
+// using namespace std;
+#define MAX_SIZE 256
+#define t_error -1;
+
+typedef int DATA_TYPE; // máximo número de elementos
+typedef int almacen[MAX_SIZE];
+
+class SDQueue {
+    // atributos
+    int  itemsize; // tamaño de cada elemento
+    int  items;    // número de elementos
+    int  cola, cabeza; // punteros de lectura y escritura
+    almacen alma;  // el almacen o arreglo
+
+public:
+    // constructor
+    SDQueue() : cola(0), cabeza(0), items(0), itemsize(sizeof(DATA_TYPE)) {}
+
+    // destructor
+    ~SDQueue() {}
+
+int empty() { return items == 0; }
+
+int size() { return items; }
+
+/* agregar componente en la parte tracera de la lista */
+DATA_TYPE put_back(DATA_TYPE valor)
+{
+    if (items == MAX_SIZE) return t_error;
+    alma[cola] = valor;
+    items ++;
+    cola  ++;
+    return valor;
+}
+
+/* agregar componente en la parte delantera de la lista */
+DATA_TYPE put_front(DATA_TYPE valor)
+{
+    if (items == MAX_SIZE) return t_error;
+    memmove((void *)&alma[cabeza+1], (void*)&alma[cabeza], items*itemsize);
+    alma[cabeza] = valor;
+    items ++;
+    cola  ++;
+    return valor;
+}
+
+
+/* retirar elemento de la parte frontal de la lista */
+DATA_TYPE get_front()
+{
+    DATA_TYPE d;
+
+    if ( empty() ) return t_error;
+    items --;
+    cola  --;
+    d = alma[cabeza];
+    memmove((void*)&alma[cabeza], (void*)&alma[cabeza+1], items*itemsize);
+    return d;
+}
+
+/* retirar elemento de la parte tracera de la lista */
+DATA_TYPE get_back()
+{
+    DATA_TYPE d;
+
+    if ( empty() ) return t_error;
+    items--;
+    cola --;
+    d = alma[cola];
+    return d;
+}
+
+}; // fin de la clase SDQueue
+
+/* punto de prueba */
+int main()
+{
+    SDQueue s;
+    DATA_TYPE d;
+
+    for (d='A'; d<='Z'; d++) s.put_back(d);
+
+    while ( ! s.empty() )
+	cout << (char)s.get_front() << " ";
+
+    cout << "\nPara terminar presione <Enter>...";
+    cin.get();
+    return 0;
+}
