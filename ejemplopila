@@ -4,7 +4,7 @@ using namespace std;
 #define STACK_SIZE 256 /* capacidad máxima */
 typedef char arreglo[STACK_SIZE];
  
-class Stack {
+class stack {
 	 
 	int sp; /* puntero de lectura/escritura */
 	int items; /* número de elementos en lista */
@@ -13,14 +13,14 @@ class Stack {
 	 
 	public:
 		// constructor
-		Stack() {
+		stack() {
 			sp = STACK_SIZE-1;
 			items = 0;
 			itemsize = 1;
 		 }
 	 
 		// destructor
-		~Stack() {};
+		~stack() {};
 	 
 	/* regresa el número de elementos en lista */
 	int size() { return items; }
@@ -54,11 +54,11 @@ class Stack {
  
 // probando la pila. 
 // Nota: obseve cómo los elementos se ingresan en orden desde la A hasta la Z,
-// ¿Qué hace el programa?
+// ¿Qué hace el programa? completar las instrucciones y corregir errores
 int main()
 {
     int d;
-    Stack s;  // s es un objeto (instancia) de la clase Stack
+    stack s;  // s es un objeto (instancia) de la clase Stack
  
     // llenando la pila
     for (d='A'; d<='Z'; d++) s.put(d);
