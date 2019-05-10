@@ -2,7 +2,7 @@
 using namespace std;
  
 #define STACK_SIZE 256 /* capacidad máxima */
-char arreglo[STACK_SIZE];
+typedef char arreglo[STACK_SIZE];
  
 class Stack {
 	 
