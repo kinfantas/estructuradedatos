@@ -1,0 +1,92 @@
+class Nodo:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class ListaEnlazada:
+    def __init__(self):
+        self.head = None
+
+    def insertar_al_principio(self, data):
+        nuevo_nodo = Nodo(data)
+        nuevo_nodo.next = self.head
+        self.head = nuevo_nodo
+
+    def insertar_al_final(self, data):
+        nuevo_nodo = Nodo(data)
+        if not self.head:
+            self.head = nuevo_nodo
+            return
+        temp = self.head
+        while temp.next:
+            temp = temp.next
+        temp.next = nuevo_nodo
+
+    def insertar_en_medio(self, data, posicion):
+        if posicion == 0:
+            self.insertar_al_principio(data)
+            return
+        nuevo_nodo = Nodo(data)
+        temp = self.head
+        for _ in range(posicion - 1):
+            if temp is None:
+                raise IndexError("Posición fuera de rango")
+            temp = temp.next
+        nuevo_nodo.next = temp.next
+        temp.next = nuevo_nodo
+
+    def retirar_al_principio(self):
+        if not self.head:
+            raise Exception("La lista está vacía")
+        dato_retirado = self.head.data
+        self.head = self.head.next
+        return dato_retirado
+
+    def retirar_al_final(self):
+        if not self.head:
+            raise Exception("La lista está vacía")
+        if not self.head.next:
+            dato_retirado = self.head.data
+            self.head = None
+            return dato_retirado
+        temp = self.head
+        while temp.next.next:
+            temp = temp.next
+        dato_retirado = temp.next.data
+        temp.next = None
+        return dato_retirado
+
+    def esta_vacia(self):
+        return self.head is None
+
+    def __str__(self):
+        temp = self.head
+        lista_str = ""
+        while temp:
+            lista_str += str(temp.data) + " -> "
+            temp = temp.next
+        lista_str += "None"
+        return lista_str
+
+# Ejemplo de uso
+lista = ListaEnlazada()
+print("¿La lista está vacía?", lista.esta_vacia())  # Output: True
+
+lista.insertar_al_final(1)
+lista.insertar_al_final(2)
+lista.insertar_al_final(3)
+print("Lista actual:", lista)  # Output: 1 -> 2 -> 3 -> None
+
+print("Retirando elemento al principio:", lista.retirar_al_principio())  # Output: 1
+print("Lista actual:", lista)  # Output: 2 -> 3 -> None
+
+print("Retirando elemento al final:", lista.retirar_al_final())  # Output: 3
+print("Lista actual:", lista)  # Output: 2 -> None
+
+lista.insertar_al_principio(4)
+print("Lista actual:", lista)  # Output: 4 -> 2 -> None
+
+print("¿La lista está vacía?", lista.esta_vacia())  # Output: False
+
+lista.insertar_en_medio(5, 1)
+print("Lista actual:", lista)  # Output: 4 -> 5 -> 2 -> None
