@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+
+// Nodo de la cola
+struct Nodo {
+    string valor;
+    Nodo* sig;
+
+    Nodo(string v) : valor(v), sig(nullptr) {}
+};
+
+class ColaCircular {
+private:
+    Nodo* frente;
+    Nodo* final;
+
+public:
+    ColaCircular() : frente(nullptr), final(nullptr) {}
+
+    ~ColaCircular() {
+        while (!estaVacia()) {
+            desencolar();
+        }
+    }
+
+    // Encola un nuevo elemento
+    void encolar(const string& valor) {
+        Nodo* nuevo = new Nodo(valor);
+
+        if (!frente) {
+            // Primer nodo: apunta a sí mismo
+            frente = final = nuevo;
+            nuevo->sig = nuevo;
+        } else {
+            nuevo->sig = frente;
+            final->sig = nuevo;
+            final = nuevo;
+        }
+    }
+
+    // Desencola y devuelve el valor
+    string desencolar() {
+        if (estaVacia()) return "COLA VACÍA";
+
+        string dato;
+        if (frente == final) {
+            // Solo un
