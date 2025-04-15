@@ -150,3 +150,136 @@ int main()
     cin.get();
     return 0;
 }
+
+// Con clases 
+
+#include <iostream>
+using namespace std;
+
+// Definimos el tipo de dato que manejará la cola
+typedef char DATA_TYPE;
+
+// Clase Nodo: representa cada elemento de la cola
+class Nodo {
+public:
+    DATA_TYPE data;
+    Nodo* next;
+    Nodo* prev;
+
+    // Constructor
+    Nodo(DATA_TYPE valor) : data(valor), next(nullptr), prev(nullptr) {}
+};
+
+// Clase Cola Doblemente Enlazada (DQueue)
+class DDQueue {
+private:
+    Nodo* cabeza;  // Apunta al primer nodo
+    Nodo* cola;    // Apunta al último nodo
+    int items;     // Cantidad de elementos
+
+public:
+    // Constructor
+    DDQueue() : cabeza(nullptr), cola(nullptr), items(0) {}
+
+    // Destructor: elimina todos los nodos
+    ~DDQueue() {
+        while (!empty()) {
+            get_front(); // Libera memoria
+        }
+    }
+
+    // Agregar un dato al final
+    void put_back(DATA_TYPE valor) {
+        Nodo* temp = new Nodo(valor);
+        if (!cabeza) {   // if (cabeza == nullptr)
+            cabeza = cola = temp;
+        } else {
+            cola->next = temp;
+            temp->prev = cola;
+            cola = temp;
+        }
+        items++;
+    }
+
+    // Agregar un dato al inicio
+    void put_front(DATA_TYPE valor) {
+        Nodo* temp = new Nodo(valor);
+        if (!cabeza) {
+            cabeza = cola = temp;
+        } else {
+            cabeza->prev = temp;
+            temp->next = cabeza;
+            cabeza = temp;
+        }
+        items++;
+    }
+
+    // Eliminar y devolver el dato del inicio
+    DATA_TYPE get_front() {
+        if (empty()) return -1;
+        DATA_TYPE valor = cabeza->data;
+        Nodo* temp = cabeza;
+        cabeza = cabeza->next;
+
+        if (cabeza) cabeza->prev = nullptr;
+        else cola = nullptr;
+
+        delete temp;
+        items--;
+        return valor;
+    }
+
+    // Eliminar y devolver el dato del final
+    DATA_TYPE get_back() {
+        if (empty()) return -1;
+        DATA_TYPE valor = cola->data;
+        Nodo* temp = cola;
+        cola = cola->prev;
+
+        if (cola) cola->next = nullptr;
+        else cabeza = nullptr;
+
+        delete temp;
+        items--;
+        return valor;
+    }
+
+    // Verifica si la cola está vacía
+    bool empty() const {
+        return items == 0;
+    }
+
+    // Muestra todos los elementos de la cola
+    void mostrar() const {
+        Nodo* actual = cabeza;
+        while (actual) {
+            cout << actual->data << " ";
+            actual = actual->next;
+        }
+        cout << endl;
+    }
+};
+
+// Función principal para probar la clase
+int main() {
+    DDQueue cola;
+
+    // Insertar letras A-Z al final
+    for (char c = 'A'; c <= 'Z'; c++) {
+        cola.put_back(c);
+    }
+
+    // Insertar dígitos 9-0 al inicio
+    for (int i = 9; i >= 0; i--) {
+        cola.put_front(i + '0');
+    }
+
+    // Mostrar y vaciar la cola
+    cout << "Contenido de la cola (de frente a fondo):" << endl;
+    while (!cola.empty()) {
+        cout << cola.get_front() << " ";
+    }
+
+    cout << "\nFin del programa.\n";
+    return 0;
+}
