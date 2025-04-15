@@ -1,0 +1,90 @@
+#include <iostream>
+#include <sstream>  // Para separar por espacios con stringstream
+using namespace std;
+
+#define MAX 10
+
+class ColaCircular {
+private:
+    string datos[MAX];
+    int frente;
+    int fin;
+    int cantidad;
+
+public:
+    ColaCircular() {
+        frente = 0;
+        fin = -1;
+        cantidad = 0;
+    }
+
+    bool estaLlena() {
+        return cantidad == MAX;
+    }
+
+    bool estaVacia() {
+        return cantidad == 0;
+    }
+
+    bool encolar(string valor) {
+        if (estaLlena()) return false;
+
+        fin = (fin + 1) % MAX;
+        datos[fin] = valor;
+        cantidad++;
+        return true;
+    }
+
+    string desencolar() {
+        if (estaVacia()) return "COLA VACÍA";
+
+        string valor = datos[frente];
+        frente = (frente + 1) % MAX;
+        cantidad--;
+        return valor;
+    }
+
+    void mostrar() {
+        if (estaVacia()) {
+            cout << "Cola vacía.\n";
+            return;
+        }
+
+        cout << "Contenido de la cola: ";
+        int i = frente;
+        for (int cont = 0; cont < cantidad; cont++) {
+            cout << "[" << datos[i] << "] ";
+            i = (i + 1) % MAX;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    ColaCircular cola;
+    string linea;
+
+    cout << "Ingrese palabras separadas por espacios: ";
+    getline(cin, linea);
+
+    stringstream ss(linea);
+    string palabra;
+
+    // Separar y encolar
+    while (ss >> palabra) {
+        if (!cola.encolar(palabra)) {
+            cout << "Cola llena. No se pudo insertar: " << palabra << endl;
+        }
+    }
+
+    // Mostrar contenido
+    cola.mostrar();
+
+    // Atender (vaciar la cola)
+    cout << "\nAtendiendo cola...\n";
+    while (!cola.estaVacia()) {
+        cout << "Atendido: " << cola.desencolar() << endl;
+    }
+
+    return 0;
+}
