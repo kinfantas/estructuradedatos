@@ -44,4 +44,60 @@ public:
 
         string dato;
         if (frente == final) {
-            // Solo un
+            // Solo un elemento
+            dato = frente->valor;
+            delete frente;
+            frente = final = nullptr;
+        } else {
+            Nodo* temp = frente;
+            dato = temp->valor;
+            frente = frente->sig;
+            final->sig = frente;
+            delete temp;
+        }
+        return dato;
+    }
+
+    // ¿La cola está vacía?
+    bool estaVacia() {
+        return frente == nullptr;
+    }
+
+    // Mostrar elementos recorriendo la cola
+    void mostrar() {
+        if (estaVacia()) {
+            cout << "Cola vacía.\n";
+            return;
+        }
+
+        Nodo* actual = frente;
+        cout << "Cola: ";
+        do {
+            cout << "[" << actual->valor << "] ";
+            actual = actual->sig;
+        } while (actual != frente);
+        cout << endl;
+    }
+};
+
+int main() {
+    ColaCircular cola;
+
+    cola.encolar("Juan");
+    cola.encolar("Maria");
+    cola.encolar("Pedro");
+
+    cola.mostrar();
+
+    cout << "Atendiendo: " << cola.desencolar() << endl;
+    cola.mostrar();
+
+    cola.encolar("Luis");
+    cola.mostrar();
+
+    cout << "Atendiendo: " << cola.desencolar() << endl;
+    cout << "Atendiendo: " << cola.desencolar() << endl;
+    cola.mostrar();
+
+    return 0;
+}
