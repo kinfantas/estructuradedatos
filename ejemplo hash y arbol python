@@ -1,0 +1,57 @@
+import hashlib
+
+class Nodo:
+    def __init__(self, valor, izquierdo=None, derecho=None):
+        self.valor = valor
+        self.izquierdo = izquierdo
+        self.derecho = derecho
+        self.hash = self.calcular_hash()
+
+    def calcular_hash(self):
+        # Genera el hash del valor del nodo
+        valor_str = str(self.valor)
+        return hashlib.sha256(valor_str.encode('utf-8')).hexdigest()
+
+    def __str__(self):
+        return f"Valor: {self.valor} | Hash: {self.hash[:10]}..."
+
+class ArbolBinario:
+    def __init__(self):
+        self.raiz = None
+
+    def insertar(self, valor):
+        if self.raiz is None:
+            self.raiz = Nodo(valor)
+        else:
+            self._insertar_recursivo(self.raiz, valor)
+
+    def _insertar_recursivo(self, nodo_actual, valor):
+        if valor < nodo_actual.valor:
+            if nodo_actual.izquierdo is None:
+                nodo_actual.izquierdo = Nodo(valor)
+            else:
+                self._insertar_recursivo(nodo_actual.izquierdo, valor)
+        else:
+            if nodo_actual.derecho is None:
+                nodo_actual.derecho = Nodo(valor)
+            else:
+                self._insertar_recursivo(nodo_actual.derecho, valor)
+
+    def imprimir_inorden(self):
+        self._inorden(self.raiz)
+
+    def _inorden(self, nodo):
+        if nodo is not None:
+            self._inorden(nodo.izquierdo)
+            print(nodo)
+            self._inorden(nodo.derecho)
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    arbol = ArbolBinario()
+    datos = [50, 30, 70, 20, 40, 60, 80]
+    for valor in datos:
+        arbol.insertar(valor)
+
+    print("Árbol en recorrido inorden con hashes:")
+    arbol.imprimir_inorden()
