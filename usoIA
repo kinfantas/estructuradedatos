@@ -1,0 +1,38 @@
+// Instalar desde la consola pip install scikit-learn
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Estructura de datos: Diccionario con productos y descripciones
+productos = {
+    "p1": {"nombre": "Laptop Gamer", "descripcion": "computadora con tarjeta gráfica potente y procesador rápido"},
+    "p2": {"nombre": "Laptop de oficina", "descripcion": "portátil ligera para trabajo y navegación web"},
+    "p3": {"nombre": "Celular gama alta", "descripcion": "teléfono rápido con buena cámara y gran almacenamiento"},
+    "p4": {"nombre": "Tablet educativa", "descripcion": "dispositivo para niños con apps de aprendizaje"},
+    "p5": {"nombre": "PC de escritorio", "descripcion": "equipo de escritorio para tareas intensivas y gaming"},
+}
+
+# Preparamos la lista de descripciones
+descripciones = [info["descripcion"] for info in productos.values()]
+
+# Vectorizamos usando TF-IDF
+vectorizador = TfidfVectorizer()
+matriz_tfidf = vectorizador.fit_transform(descripciones)
+
+# Calculamos la similitud entre productos
+similitud = cosine_similarity(matriz_tfidf)
+
+# Función para recomendar productos similares
+def recomendar(producto_id, top_n=3):
+    claves = list(productos.keys())
+    idx = claves.index(producto_id)
+    similitudes = list(enumerate(similitud[idx]))
+    similitudes = sorted(similitudes, key=lambda x: -x[1])
+
+    print(f"\nRecomendaciones para: {productos[producto_id]['nombre']}")
+    for i, score in similitudes[1:top_n+1]:
+        clave_recomendada = claves[i]
+        print(f"- {productos[clave_recomendada]['nombre']} (similitud: {score:.2f})")
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    recomendar("p1")  # Recomendaciones para "Laptop Gamer"
