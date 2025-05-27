@@ -1,0 +1,145 @@
+import queue
+import hashlib
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# -----------------------------
+# ESTRUCTURAS DE DATOS BÁSICAS
+# -----------------------------
+
+# Lista
+def ejemplo_lista():
+    mi_lista = [10, 20, 30]
+    mi_lista.append(40)
+    print("Lista:", mi_lista)
+
+# Pila (stack)
+def ejemplo_pila():
+    pila = []
+    pila.append(1)
+    pila.append(2)
+    pila.append(3)
+    print("Pila original:", pila)
+    pila.pop()
+    print("Pila después de pop:", pila)
+
+# Cola (queue)
+def ejemplo_cola():
+    cola = queue.Queue()
+    cola.put("A")
+    cola.put("B")
+    cola.put("C")
+    print("Elemento en frente de la cola:", cola.get())
+
+# Árbol binario
+class NodoArbol:
+    def __init__(self, valor):
+        self.valor = valor
+        self.izq = None
+        self.der = None
+
+def insertar_arbol(raiz, valor):
+    if raiz is None:
+        return NodoArbol(valor)
+    if valor < raiz.valor:
+        raiz.izq = insertar_arbol(raiz.izq, valor)
+    else:
+        raiz.der = insertar_arbol(raiz.der, valor)
+    return raiz
+
+def inorden(nodo):
+    if nodo:
+        inorden(nodo.izq)
+        print(nodo.valor, end=" ")
+        inorden(nodo.der)
+
+def ejemplo_arbol():
+    valores = [50, 30, 70, 20, 40, 60, 80]
+    raiz = None
+    for val in valores:
+        raiz = insertar_arbol(raiz, val)
+    print("Árbol en inorden:")
+    inorden(raiz)
+    print()
+
+# Diccionario (hash table)
+def ejemplo_diccionario():
+    agenda = {"Ana": 1234, "Luis": 5678}
+    agenda["Pedro"] = 9012
+    print("Agenda:", agenda)
+
+# Grafo representado por lista de adyacencia
+def ejemplo_grafo():
+    grafo = {
+        "A": ["B", "C"],
+        "B": ["A", "D"],
+        "C": ["A", "D"],
+        "D": ["B", "C"]
+    }
+    print("Grafo:", grafo)
+
+# -------------------------
+# IA: RECOMENDADOR BÁSICO
+# -------------------------
+def recomendador_estructuras():
+    descripciones = {
+        "Lista": "estructura lineal que permite acceder y modificar elementos por posición",
+        "Pila": "estructura LIFO donde el último elemento en entrar es el primero en salir",
+        "Cola": "estructura FIFO donde el primer elemento en entrar es el primero en salir",
+        "Árbol": "estructura jerárquica con nodos padres e hijos, útil para búsqueda y ordenamiento",
+        "Diccionario": "estructura que asocia claves únicas a valores, implementado como hash",
+        "Grafo": "estructura de nodos conectados por aristas, útil para rutas y redes"
+    }
+
+    problema = input("\nDescribe el problema que quieres resolver: ")
+    nombres = list(descripciones.keys())
+    corpus = list(descripciones.values()) + [problema]
+
+    vectorizador = TfidfVectorizer()
+    matriz = vectorizador.fit_transform(corpus)
+
+    similitudes = cosine_similarity(matriz[-1], matriz[:-1])[0]
+    resultados = sorted(zip(nombres, similitudes), key=lambda x: -x[1])
+
+    print("\nEstructuras recomendadas según tu descripción:")
+    for nombre, score in resultados[:3]:
+        print(f"- {nombre} (relevancia: {score:.2f})")
+
+# -------------------------
+# MENÚ PRINCIPAL
+# -------------------------
+def menu():
+    while True:
+        print("\n--- MENÚ DE ESTRUCTURAS DE DATOS ---")
+        print("1. Lista")
+        print("2. Pila")
+        print("3. Cola")
+        print("4. Árbol")
+        print("5. Diccionario")
+        print("6. Grafo")
+        print("7. IA: Recomendador de estructura")
+        print("0. Salir")
+
+        opcion = input("Elige una opción: ")
+        if opcion == "1":
+            ejemplo_lista()
+        elif opcion == "2":
+            ejemplo_pila()
+        elif opcion == "3":
+            ejemplo_cola()
+        elif opcion == "4":
+            ejemplo_arbol()
+        elif opcion == "5":
+            ejemplo_diccionario()
+        elif opcion == "6":
+            ejemplo_grafo()
+        elif opcion == "7":
+            recomendador_estructuras()
+        elif opcion == "0":
+            print("Gracias por usar el programa.")
+            break
+        else:
+            print("Opción no válida.")
+
+if __name__ == "__main__":
+    menu()
